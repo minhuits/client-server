@@ -1,5 +1,6 @@
 package com.example.server.controller;
 
+import com.example.server.dto.Request;
 import com.example.server.dto.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -18,9 +19,22 @@ public class ServerAipController {
     }
 
     @PostMapping("/user/{userId}/name/{userName}")
-    public User post(@RequestBody User user, @PathVariable int userId, @PathVariable String userName) {
+    public Request<User> post(
+            @RequestBody Request<User> user,
+            @PathVariable int userId,
+            @PathVariable String userName,
+            @RequestHeader("x-authorization") String authorization,
+            @RequestHeader("custom-header") String customHeader
+    ) {
         log.info("UserId : {}, UserName : {}", userId, userName);
+        log.info("authorization : {}, custom Header : {}", authorization, customHeader);
         log.info("client request : {}", user);
-        return user;
+
+        Request<User> response = new Request<>();
+        response.setHeader(new Request.Header());
+        response.setResBody(user.getResBody());
+
+        return response;
     }
+
 }
